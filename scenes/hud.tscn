@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://cglyhg706btli"]
+
+[ext_resource type="Texture2D" uid="uid://cr36dx1u1m8en" path="res://assets/JumpChargeMeterEmpty.png" id="1_s040g"]
+[ext_resource type="Texture2D" uid="uid://cwxeayc21bvqo" path="res://assets/JumpChargeMeterProgress.png" id="2_4lsbk"]
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="."]
+layout_mode = 0
+offset_left = 948.0
+offset_top = 769.0
+offset_right = 972.0
+offset_bottom = 801.0
+scale = Vector2(2, 2)
+fill_mode = 3
+texture_under = ExtResource("1_s040g")
+texture_over = ExtResource("1_s040g")
+texture_progress = ExtResource("2_4lsbk")
