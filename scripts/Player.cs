@@ -9,6 +9,7 @@ public partial class Player : CharacterBody3D
 	public float walkSpeed = 5.0f;
 	public float sprintScalar = 1.63f;
 	public float mouseSensitivity = 0.0006f;
+	public float maxSpeed = 5.0f;
 
 	//Jump attributes
 	public float jumpVelocity;
@@ -48,6 +49,9 @@ public partial class Player : CharacterBody3D
 	//Int to increment when jump is charged then access to alter jump height depending on it
 	public float jumpCharge;
 	public float oppositeY;
+	public Vector3 velocity;
+
+
 
 
 
@@ -84,7 +88,9 @@ public partial class Player : CharacterBody3D
 
     public override void _PhysicsProcess(double delta)
 	{
-		Vector3 velocity = Velocity;
+		velocity = Velocity;
+		//velocity.X = Mathf.Clamp(velocity.X, -maxSpeed, maxSpeed);
+		//velocity.Z = Mathf.Clamp(velocity.Z, -maxSpeed, maxSpeed);
         Vector2 inputDir = Input.GetVector("left", "right", "up", "down");
 		Vector3 direction = Head.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y);
 		
@@ -146,13 +152,13 @@ public partial class Player : CharacterBody3D
 		}
 		if (direction != Vector3.Zero)
 		{
-			velocity.X = Mathf.Lerp(0, direction.X * Speed, 1);
-			velocity.Z = Mathf.Lerp(0, direction.Z * Speed, 1);
+			velocity.X = Mathf.Lerp(0, direction.X * Speed, 1f);
+			velocity.Z = Mathf.Lerp(0, direction.Z * Speed, 1f);
 		}
 		if (direction == Vector3.Zero)
 		{
-			velocity.X = Mathf.Lerp(Velocity.X, 0, 0.2f);
-			velocity.Z = Mathf.Lerp(Velocity.Z, 0, 0.2f);
+			velocity.X = Mathf.Lerp(Velocity.X, 0, 0.1f);
+			velocity.Z = Mathf.Lerp(Velocity.Z, 0, 0.1f);
 			if (state != States.Crouching)
 			{
 				state = States.Idle;
@@ -205,19 +211,30 @@ public partial class Player : CharacterBody3D
 		}
 		if (Input.IsActionJustPressed("coachgun"))
 		{
+			GetNode<AnimationPlayer>("Head/Camera3D/CoachGun/AnimationPlayer").Play("CoachGun");
+			_coachGunTimer();
 			//need to do some math i think using the Head.Transform.Basis matrix
 			//what it should do is give the player a velocity boost in the direction they face away from
 			//maybe something like this: 
-			velocity += new Vector3((-Head.Transform.Basis.Column0.Z *85) - Camera.Rotation.X * oppositeY *(-Head.Transform.Basis.Column0.Z *85 / 1.5707964f), -(Camera.Rotation.X *11.5f), (Head.Transform.Basis.Column2.Z *85) - Camera.Rotation.X * oppositeY *(Head.Transform.Basis.Column2.Z *85 / 1.5707964f));
 			
 			//velocity += new Vector3(-Head.Transform.Basis.Column0.Z *65 , -Camera.Rotation.X *10, Head.Transform.Basis.Column2.Z *65 );
 			
 		}
-		GD.Print(velocity);
-
 		_YpositiveNegative(Camera.Rotation.X);
 		Velocity = velocity;
 		MoveAndSlide();
+	}
+
+	public void _coachGunTimer()
+	{	
+		GD.Print("itworkd");
+		SceneTreeTimer CoachTimer = GetTree().CreateTimer(0.87);
+		CoachTimer.Timeout += _coachGunLaunch;
+	}
+
+	public void _coachGunLaunch()
+	{
+		velocity += new Vector3((-Head.Transform.Basis.Column0.Z *85) - Camera.Rotation.X * oppositeY *(-Head.Transform.Basis.Column0.Z *85 / 1.5707964f), -(Camera.Rotation.X *11.5f), (Head.Transform.Basis.Column2.Z *85) - Camera.Rotation.X * oppositeY *(Head.Transform.Basis.Column2.Z *85 / 1.5707964f));
 	}
 
 
@@ -266,6 +283,7 @@ public partial class Player : CharacterBody3D
 			oppositeY = 1;
 		}
 	}
+
 
 
 }

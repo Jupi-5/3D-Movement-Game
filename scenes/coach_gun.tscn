@@ -1,40 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://det4f21pwihjw"]
+[gd_scene load_steps=2 format=3 uid="uid://det4f21pwihjw"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j538p"]
-albedo_color = Color(0.513233, 0.513233, 0.513233, 1)
-metallic = 0.71
-metallic_specular = 0.66
-roughness = 0.54
+[ext_resource type="PackedScene" uid="uid://b11kgd2tu2u72" path="res://assets/Scattergun.glb" id="1_u5noi"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_et8vx"]
-material = SubResource("StandardMaterial3D_j538p")
-size = Vector3(0.235, 0.045, 0.11)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_punoi"]
-albedo_color = Color(0.32151, 0.187506, 0.0452925, 1)
-
-[sub_resource type="BoxMesh" id="BoxMesh_ggrny"]
-material = SubResource("StandardMaterial3D_punoi")
-size = Vector3(0.04, 0.04, 0.1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6bqu3"]
-albedo_color = Color(0.321569, 0.188235, 0.0470588, 1)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_ffybf"]
-material = SubResource("StandardMaterial3D_6bqu3")
-top_radius = 0.025
-bottom_radius = 0.025
-height = 0.091
-
-[node name="CoachGun" type="Node3D"]
-
-[node name="Barrel" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_et8vx")
-
-[node name="ConnectingBit" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.96363, 0.267238, 0, -0.267238, 0.96363, 0, 0, 0, 1, 0.122048, 0, 0)
-mesh = SubResource("BoxMesh_ggrny")
-
-[node name="Grip" type="MeshInstance3D" parent="."]
-transform = Transform3D(0.82655, -0.562863, 0, 0.562863, 0.82655, 0, 0, 0, 1, 0.151845, -0.0362407, 0)
-mesh = SubResource("CylinderMesh_ffybf")
+[node name="CoachGun" instance=ExtResource("1_u5noi")]
+transform = Transform3D(-0.140901, -0.990024, 0, 0.990024, -0.140901, 0, 0, 0, 1, 0, 0, 0)
