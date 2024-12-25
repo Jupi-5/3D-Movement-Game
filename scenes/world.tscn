@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://bqjk0qakdlnk5"]
+[gd_scene load_steps=24 format=3 uid="uid://bqjk0qakdlnk5"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_h1i0i"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -73,6 +73,26 @@ size = Vector3(9.455, 0.455, 15.82)
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_yt2ee"]
 points = PackedVector3Array(4.72657, 0.2275, 7.91, 4.72657, -0.2275, 7.91, 4.72657, 0.2275, -7.91, -4.7275, 0.2275, 7.91, -4.7275, -0.2275, 7.91, 4.72657, -0.2275, -7.91, -4.7275, 0.2275, -7.91, -4.7275, -0.2275, -7.91)
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_5qiul"]
+noise_type = 0
+frequency = 0.0243
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6xgkd"]
+seamless = true
+noise = SubResource("FastNoiseLite_5qiul")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tsqbl"]
+albedo_color = Color(0.413877, 0.404666, 0.418353, 1)
+albedo_texture = SubResource("NoiseTexture2D_6xgkd")
+
+[sub_resource type="PrismMesh" id="PrismMesh_5rr01"]
+material = SubResource("StandardMaterial3D_tsqbl")
+left_to_right = -0.2
+size = Vector3(7.435, 6.465, 3.44)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_glfrm"]
+points = PackedVector3Array(-5.2045, 3.23187, 1.72, -5.2045, 3.23187, -1.72, -3.71808, -3.2325, 1.72, 3.7175, -3.2325, 1.72, 3.7175, -3.2325, -1.72, -3.71808, -3.2325, -1.72)
+
 [node name="World" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -136,3 +156,13 @@ mesh = SubResource("BoxMesh_kdp1v")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Platform"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6386, -4.36887, 1.43079)
 shape = SubResource("ConvexPolygonShape3D_yt2ee")
+
+[node name="Ramp" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ramp"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.5944, 3.2325, -0.853934)
+mesh = SubResource("PrismMesh_5rr01")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ramp"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.5944, 3.3673, -0.853934)
+shape = SubResource("ConvexPolygonShape3D_glfrm")

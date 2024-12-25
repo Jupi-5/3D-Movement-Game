@@ -9,7 +9,7 @@ public partial class Player : CharacterBody3D
 	public float walkSpeed = 9.0f;
 	public float sprintScalar = 1.63f;
 	public float mouseSensitivity = 0.0006f;
-	public float maxSpeed = 5.0f;
+	public float maxSpeed = 10.0f;
 
 	//Jump attributes
 	public float jumpVelocity;
@@ -22,6 +22,7 @@ public partial class Player : CharacterBody3D
 	//Shortnamed nodes for readability and ease of editing
 	public Node3D Head;
 	public Camera3D Camera;
+	public CollisionShape3D playerCollision;
 	public bool Charging = false;
 	public TextureProgressBar chargeBar;
 	
@@ -86,11 +87,14 @@ public partial class Player : CharacterBody3D
 			//reset the rotation of head basis
 			//x, y, z = [1,0,0] [0,1,0] [0,0,1]
 			Transform3D headTransform = Head.Transform;
+			Transform3D collisionTransform = playerCollision.Transform;
 			headTransform.Basis = Basis.Identity;
 			Head.Transform = headTransform;
 
+
 			Head.RotateObjectLocal(Vector3.Up, _rotationX);
 			Head.RotateObjectLocal(Vector3.Right, _rotationY);
+			playerCollision.RotateObjectLocal(Vector3.Right, _rotationY);
 		}
     }
     public override void _Input(InputEvent @event)
@@ -101,12 +105,14 @@ public partial class Player : CharacterBody3D
 
     public override void _PhysicsProcess(double delta)
 	{
+		
 		velocity = Velocity;
 		Mathf.Clamp(velocity.X, -maxSpeed, maxSpeed);
 		Mathf.Clamp(velocity.Z, -maxSpeed, maxSpeed);
         Vector2 inputDir = Input.GetVector("left", "right", "up", "down");
 		Vector3 direction = Head.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y);
-		
+		GD.Print(direction);
+
 		velocity.Y += _getRealGravity() * (float)delta;
 		switch (state)
 		{
@@ -165,8 +171,8 @@ public partial class Player : CharacterBody3D
 		}
 		if (direction != Vector3.Zero)
 		{
-			velocity.X = Mathf.Lerp(0, direction.X * Speed, 1f);
-			velocity.Z = Mathf.Lerp(0, direction.Z * Speed, 1f);
+			velocity.X = Mathf.Lerp(0, direction.X * walkSpeed, 1f);
+			velocity.Z = Mathf.Lerp(0, direction.Z * walkSpeed, 1f);
 		}
 		if (direction == Vector3.Zero)
 		{
@@ -225,11 +231,9 @@ public partial class Player : CharacterBody3D
 		if (Input.IsActionJustPressed("coachgun"))
 		{
 			GetNode<AnimationPlayer>("Head/Camera3D/CoachGun/AnimationPlayer").Play("CoachGun");
-			//velocity += new Vector3(Head.Basis.Z.X *coachGunPower.X, Head.Basis.Z.Y *coachGunPower.Y, Head.Basis.Z.Z *coachGunPower.X);
 			_coachGunTimer();
 			
 		}
-		_YpositiveNegative(Camera.Rotation.X);
 		if (newVelocity != velocity && newVelocity != Vector3.Zero)
 		{
 			velocity = newVelocity;
@@ -290,15 +294,18 @@ public partial class Player : CharacterBody3D
 			return fallGravity;
 		}
 	}
-	public void _YpositiveNegative(float InputValue)
+
+	public void Jump()
 	{
-		if (InputValue < 0)
-		{
-			oppositeY = -1;
-		}
+		if (jumpCharge == 0)
+			{
+				velocity.Y = jumpVelocity;
+			}
 		else
-		{
-			oppositeY = 1;
-		}
+			{
+				velocity.Y = jumpVelocity + (jumpCharge / 10);
+			}
+			GD.Print(velocity.Y);
+			_jumpChargeReset();
 	}
 }
