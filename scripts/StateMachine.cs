@@ -49,7 +49,7 @@ public partial class StateMachine : Node
 	{
 		if (!_states.ContainsKey(key) || _currentState == _states[key])
 		{
-			GD.Print(Owner.Name + ": Trying to transition to state " + _currentState + " but it does not exist.");
+			GD.PrintErr(Owner.Name + ": Trying to transition to state " + _currentState + " but it does not exist.");
 			return;
 		}
 		
@@ -58,6 +58,7 @@ public partial class StateMachine : Node
 		_currentState.Exit();
 		_currentState = _states[key];
 		_currentState.Enter();
+		GD.Print(_currentState.Name);
 	}
 
 }

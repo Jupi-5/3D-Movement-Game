@@ -7,7 +7,7 @@ public partial class State : Node
 	public PlayerState playerstate;
 
 
-	public virtual void Enter() {}
+    public virtual void Enter() {}
 	public virtual void Exit() {}
     public virtual void Ready() {}
 	public virtual void Update(float delta) {}

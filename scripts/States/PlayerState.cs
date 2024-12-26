@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Threading.Tasks;
 
 public abstract partial class PlayerState : State
 {
@@ -16,6 +17,7 @@ public abstract partial class PlayerState : State
 
     public override void _Ready()
     {
+		fsm = GetParent<StateMachine>();
         player = Owner as Player;
 		if (player == null)
 		{
@@ -25,20 +27,21 @@ public abstract partial class PlayerState : State
 
 	protected Vector3 GetInputDirection()
 	{
-   		Vector2 inputDir = Input.GetVector("left", "right", "forward", "back");
-    	return (player.collision.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+   		Vector2 inputDir = Input.GetVector("left", "right", "up", "down");
+    	Vector3 Direction = (player.collision.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+		return Direction;
 	}
 
 	protected Vector3 MoveInDirection(float moveSpeed)
 	{
 		Vector3 newVelocity = player.Velocity;
 
-        Vector3 direction = GetInputDirection();
+        Vector3 Direction = GetInputDirection();
 
-        if (direction != Vector3.Zero)
+        if (Direction != Vector3.Zero)
         {
-            newVelocity.X = direction.X * moveSpeed;
-            newVelocity.Z = direction.Z * moveSpeed;
+            newVelocity.X = Direction.X * moveSpeed;
+            newVelocity.Z = Direction.Z * moveSpeed;
         }
         else
         {

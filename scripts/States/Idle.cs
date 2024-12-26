@@ -15,7 +15,7 @@ public partial class Idle : PlayerState
         if (!player.IsOnFloor())
         // && player.velocity.Y <= 0
         {
-            GD.Print("fall");
+            GD.Print("no longer idle");
             fsm.TransitionTo("Falling");
         }
     }

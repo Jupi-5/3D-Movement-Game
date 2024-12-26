@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Threading.Tasks;
 
 
 public partial class Player : CharacterBody3D
@@ -42,6 +43,7 @@ public partial class Player : CharacterBody3D
 
     public override void _Ready()
     {
+		collision = GetNode<CollisionShape3D>("CollisionShape3D");
         Head = GetNode<Node3D>("Head");
 		AP = GetNode<AnimationPlayer>("AnimationPlayer");
 		Camera = GetNode<Camera3D>("Head/Camera3D");
