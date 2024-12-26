@@ -12,7 +12,7 @@ public partial class Gamemanager : Node
 	public override void _Ready()
 	{
 		spawnLocation.X = -65;
-		spawnLocation.Y = 2;
+		spawnLocation.Y = 7;
 		_spawnPlayer();
 	}
 

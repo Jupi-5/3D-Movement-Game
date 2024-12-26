@@ -1,12 +1,14 @@
-[gd_scene load_steps=17 format=3 uid="uid://b517el43lfdhp"]
+[gd_scene load_steps=19 format=3 uid="uid://b517el43lfdhp"]
 
 [ext_resource type="Script" path="res://scripts/Player.cs" id="1_fjk5g"]
 [ext_resource type="Texture2D" uid="uid://cr36dx1u1m8en" path="res://assets/JumpChargeMeterEmpty.png" id="2_0y0nc"]
 [ext_resource type="Texture2D" uid="uid://cwxeayc21bvqo" path="res://assets/JumpChargeMeterProgress.png" id="3_mgywi"]
 [ext_resource type="PackedScene" uid="uid://det4f21pwihjw" path="res://scenes/coach_gun.tscn" id="4_cpp6w"]
-[ext_resource type="Script" path="res://scripts/State.cs" id="5_lflbx"]
-[ext_resource type="Script" path="res://scripts/Idle.cs" id="6_j6cu0"]
-[ext_resource type="Script" path="res://scripts/Jumping.cs" id="7_ypf8v"]
+[ext_resource type="Script" path="res://scripts/StateMachine.cs" id="5_0ti22"]
+[ext_resource type="Script" path="res://scripts/States/Idle.cs" id="6_j6cu0"]
+[ext_resource type="Script" path="res://scripts/States/Jumping.cs" id="7_ypf8v"]
+[ext_resource type="Script" path="res://scripts/States/Walking.cs" id="8_22hlo"]
+[ext_resource type="Script" path="res://scripts/States/Falling.cs" id="9_0xyuw"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_3fura"]
 
@@ -339,13 +341,17 @@ texture_over = ExtResource("2_0y0nc")
 texture_progress = ExtResource("3_mgywi")
 
 [node name="StateMachine" type="Node" parent="."]
-script = ExtResource("5_lflbx")
+script = ExtResource("5_0ti22")
+initialState = NodePath("Idle")
 
 [node name="Idle" type="Node" parent="StateMachine"]
 script = ExtResource("6_j6cu0")
 
 [node name="Jumping" type="Node" parent="StateMachine"]
 script = ExtResource("7_ypf8v")
+
+[node name="Walking" type="Node" parent="StateMachine"]
+script = ExtResource("8_22hlo")
 
 [node name="Running" type="Node" parent="StateMachine"]
 
@@ -354,3 +360,6 @@ script = ExtResource("7_ypf8v")
 [node name="Sliding" type="Node" parent="StateMachine"]
 
 [node name="UsingAbility" type="Node" parent="StateMachine"]
+
+[node name="Falling" type="Node" parent="StateMachine"]
+script = ExtResource("9_0xyuw")

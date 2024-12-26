@@ -17,35 +17,16 @@ public partial class Player : CharacterBody3D
 	public float fallGravity;
 	public float jumpHeight = 10f;
 	public float jumpTimeToPeak = 2.75f;
-	public float jumpTimeToDescent = 3.0f;
+	public float jumpTimeToDescent = 2.0f;
 
 	//Shortnamed nodes for readability and ease of editing
 	public Node3D Head;
 	public Camera3D Camera;
 	public CollisionShape3D playerCollision;
-	public bool Charging = false;
 	public TextureProgressBar chargeBar;
-	
-	
-	//Enum for finite state machine
-	public enum States 
-	{
-
-		Idle,
-
-		Walking,
-
-		Crouching, 
-
-		Jumping,
-
-		Sprinting
-		
-	};
-
-	//Variable for assignment of States from enum set
-	public States state;
+	public CollisionShape3D collision;
 	public AnimationPlayer AP;
+	
 
 	//Int to increment when jump is charged then access to alter jump height depending on it
 	public float jumpCharge;
@@ -55,6 +36,7 @@ public partial class Player : CharacterBody3D
 	public float _rotationY = 0f;
 	public Vector2 coachGunPower;
 	public Vector3 newVelocity = Vector3.Zero;
+	public bool Charging = false;
 
 
 
@@ -66,11 +48,10 @@ public partial class Player : CharacterBody3D
 		coachGunPower = new Vector2(45f, 15f);
 		chargeBar = GetNode<TextureProgressBar>("TextureProgressBar");
 		Input.MouseMode = Input.MouseModeEnum.Captured;
-		state = States.Idle;
-		jumpVelocity = 2.0f * jumpHeight / jumpTimeToPeak;
+		Mathf.Clamp(_rotationX, Mathf.DegToRad(-90f), Mathf.DegToRad(90f));
 		jumpGravity = -2.0f * jumpHeight / (jumpTimeToPeak * jumpTimeToPeak);
 		fallGravity = -2.0f * jumpHeight / (jumpTimeToDescent * jumpTimeToDescent);
-		Mathf.Clamp(_rotationX, Mathf.DegToRad(-90f), Mathf.DegToRad(90f));
+		
     }
     public override void _UnhandledInput(InputEvent @event)
     {
@@ -87,14 +68,17 @@ public partial class Player : CharacterBody3D
 			//reset the rotation of head basis
 			//x, y, z = [1,0,0] [0,1,0] [0,0,1]
 			Transform3D headTransform = Head.Transform;
-			Transform3D collisionTransform = playerCollision.Transform;
 			headTransform.Basis = Basis.Identity;
 			Head.Transform = headTransform;
 
-
 			Head.RotateObjectLocal(Vector3.Up, _rotationX);
 			Head.RotateObjectLocal(Vector3.Right, _rotationY);
-			playerCollision.RotateObjectLocal(Vector3.Right, _rotationY);
+
+			Transform3D collisionTransform = collision.Transform;
+			collisionTransform.Basis = Basis.Identity;
+			collision.Transform = collisionTransform;
+
+			collision.RotateObjectLocal(Vector3.Up, _rotationX);
 		}
     }
     public override void _Input(InputEvent @event)
@@ -106,141 +90,36 @@ public partial class Player : CharacterBody3D
     public override void _PhysicsProcess(double delta)
 	{
 		
-		velocity = Velocity;
-		Mathf.Clamp(velocity.X, -maxSpeed, maxSpeed);
-		Mathf.Clamp(velocity.Z, -maxSpeed, maxSpeed);
-        Vector2 inputDir = Input.GetVector("left", "right", "up", "down");
-		Vector3 direction = Head.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y);
-		GD.Print(direction);
+	//velocity = Velocity;
+	//Mathf.Clamp(velocity.X, -maxSpeed, maxSpeed);
+	//Mathf.Clamp(velocity.Z, -maxSpeed, maxSpeed);
+    //Vector2 inputDir = Input.GetVector("left", "right", "up", "down");
+	//Vector3 direction = Head.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y);
 
-		velocity.Y += _getRealGravity() * (float)delta;
-		switch (state)
-		{
-			case States.Idle:
-			{
-				AP.Play("Idle");
-				break;
-			}
+	//velocity.Y += _getRealGravity() * (float)delta;
 
-			case States.Crouching:
-			{
-				AP.Play("CrouchGrounded");
-				if (Charging == false && IsOnFloor())
-				{
-					_chargeJump();
-					GD.Print(jumpCharge);
-				}
-				if (Input.IsActionJustReleased("Crouch"))
-				{
-					Charging = false;
-					break;
-				}
-				break;
-			}
+	//if (!IsOnFloor())
+	//{
+	//	velocity += GetGravity() * (float)delta;
+	//}
 
-			case States.Jumping:
-			{
-				if (jumpCharge == 0)
-				{
-					velocity.Y = jumpVelocity;
-				}
-				else
-				{
-					velocity.Y = jumpVelocity + (jumpCharge / 10);
-				}
-				GD.Print(velocity.Y);
-				_jumpChargeReset();
-				AP.Play("Idle");
-				break;
-			}
+	//if (Input.IsActionJustPressed("esc"))
+	//{
+	//	GetTree().Quit();
+	//}
 
-			case States.Sprinting:
-			{
-				if (Speed == walkSpeed)
-				{
-					Speed *= sprintScalar;
-				}
-				break;
-			}
-
-			case States.Walking:
-			{
-				Speed = walkSpeed;
-				break;
-			}
-		}
-		if (direction != Vector3.Zero)
-		{
-			velocity.X = Mathf.Lerp(0, direction.X * walkSpeed, 1f);
-			velocity.Z = Mathf.Lerp(0, direction.Z * walkSpeed, 1f);
-		}
-		if (direction == Vector3.Zero)
-		{
-			velocity.X = Mathf.Lerp(Velocity.X, 0, 0.1f);
-			velocity.Z = Mathf.Lerp(Velocity.Z, 0, 0.1f);
-			if (state != States.Crouching)
-			{
-				state = States.Idle;
-			}
-			
-		}
-
-
-		if (!IsOnFloor())
-		{
-			velocity += GetGravity() * (float)delta;
-		}
-
-		if (IsOnFloor() && state == States.Jumping)
-		{
-			state = States.Idle;
-		}
-
-		if (Input.IsActionPressed("crouch") && IsOnFloor() && state == States.Idle)
-		{
-			state = States.Crouching;
-		}
-
-		if (Input.IsActionJustReleased("crouch"))
-		{
-			state = States.Idle;
-		}
-
-		// Handle Jump.
-		if (Input.IsActionJustPressed("jump") && IsOnFloor())
-		{
-			state = States.Jumping;
-		}
-		if (Input.IsActionJustPressed("esc"))
-		{
-			GetTree().Quit();
-		}
-		if (Input.IsActionPressed("sprint"))
-		{
-			state = States.Sprinting;
-		}
-		if (Input.IsActionJustReleased("sprint"))
-		{
-			state = States.Walking;
-		}
-		if (jumpCharge > 10)
-		{
-			chargeBar.Visible = true;
-			chargeBar.Value = jumpCharge;
-		}
-		if (Input.IsActionJustPressed("coachgun"))
-		{
-			GetNode<AnimationPlayer>("Head/Camera3D/CoachGun/AnimationPlayer").Play("CoachGun");
-			_coachGunTimer();
-			
-		}
-		if (newVelocity != velocity && newVelocity != Vector3.Zero)
-		{
-			velocity = newVelocity;
-			newVelocity = Vector3.Zero;
-		}
-		Velocity = velocity;
-		MoveAndSlide();
+	//if (jumpCharge > 10)
+	//{
+	//	chargeBar.Visible = true;
+	//	chargeBar.Value = jumpCharge;
+	//}
+	//if (newVelocity != velocity && newVelocity != Vector3.Zero)
+	//{
+	//	velocity = newVelocity;
+	//	newVelocity = Vector3.Zero;
+	//}
+	//Velocity = velocity;
+	//MoveAndSlide();
 	}
 
 	public void _coachGunTimer()
@@ -298,14 +177,14 @@ public partial class Player : CharacterBody3D
 	public void Jump()
 	{
 		if (jumpCharge == 0)
-			{
-				velocity.Y = jumpVelocity;
-			}
+		{
+			velocity.Y = jumpVelocity;
+		}
 		else
-			{
-				velocity.Y = jumpVelocity + (jumpCharge / 10);
-			}
-			GD.Print(velocity.Y);
-			_jumpChargeReset();
+		{
+			velocity.Y = jumpVelocity + (jumpCharge / 10);
+		}
+		GD.Print(velocity.Y);
+		_jumpChargeReset();
 	}
 }

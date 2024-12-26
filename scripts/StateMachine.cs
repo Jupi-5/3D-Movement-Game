@@ -9,6 +9,7 @@ public partial class StateMachine : Node
 
 	private Dictionary<string, State> _states;
 	private State _currentState;
+	private State _prevState;
 
 
 	public override void _Ready()
@@ -25,7 +26,7 @@ public partial class StateMachine : Node
 			}
 		}
 
-		_currentState = GetNode<State>(initialState);
+		_currentState = GetNode<State>(initialState); 
 		_currentState.Enter();
 	}
 
@@ -47,8 +48,13 @@ public partial class StateMachine : Node
 	public void TransitionTo(string key)
 	{
 		if (!_states.ContainsKey(key) || _currentState == _states[key])
+		{
+			GD.Print(Owner.Name + ": Trying to transition to state " + _currentState + " but it does not exist.");
 			return;
+		}
 		
+		
+		_prevState = _currentState;
 		_currentState.Exit();
 		_currentState = _states[key];
 		_currentState.Enter();
