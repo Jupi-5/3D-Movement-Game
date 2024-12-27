@@ -15,8 +15,16 @@ public abstract partial class PlayerState : State
 
 	protected Player player;
 
+	public AnimationPlayer AP;
+
+	public Vector3 velocity;
+
+	public int jumpCharge = 0;
+
     public override void _Ready()
     {
+		AP = GetNode<AnimationPlayer>("Player/AnimationPlayer");
+		GD.Print(AP);
 		fsm = GetParent<StateMachine>();
         player = Owner as Player;
 		if (player == null)
@@ -28,11 +36,10 @@ public abstract partial class PlayerState : State
 	protected Vector3 GetInputDirection()
 	{
    		Vector2 inputDir = Input.GetVector("left", "right", "up", "down");
-    	Vector3 Direction = (player.collision.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
-		return Direction;
+    	return (player.collision.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 	}
 
-	protected Vector3 MoveInDirection(float moveSpeed)
+	protected Vector3 MoveInDirection(float moveSpeed, double delta)
 	{
 		Vector3 newVelocity = player.Velocity;
 
@@ -45,9 +52,12 @@ public abstract partial class PlayerState : State
         }
         else
         {
-            newVelocity.X += Mathf.Lerp(newVelocity.X, 0, 0.1f);
-            newVelocity.Y += Mathf.Lerp(newVelocity.Y, 0, 0.1f);
+            newVelocity.X = 0;
+           	newVelocity.Z = 0;
         }
+		//Mathf.Lerp(newVelocity.X, Direction.X * moveSpeed, (float)delta * 2)
+		//Mathf.Lerp(newVelocity.Z, Direction.Z * moveSpeed, (float)delta * 2)
+
 
         return newVelocity;
 	}

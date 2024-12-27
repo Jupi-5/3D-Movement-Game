@@ -7,22 +7,36 @@ public partial class Walking : PlayerState
 
     public override void HandleInput(InputEvent @event)
     {
-		Vector2 inputDir = Input.GetVector("left", "right", "up", "down");
 
-		if (Input.IsActionJustPressed("jump"))
+		if (Input.IsActionJustPressed("jump") && player.IsOnFloor())
 		{
 			fsm.TransitionTo("Jumping");
 		}
 		else if (Input.IsActionJustPressed("sprint"))
 		{
-			if (inputDir.Y <= 0)
-			{
-				fsm.TransitionTo("Running");
-			}
+			//if (inputDir.Y <= 0)
+			//{
+			//	fsm.TransitionTo("Sprinting");
+			//}
 		}
 		else if (Input.IsActionJustPressed("crouch"))
 		{
-			
+			fsm.TransitionTo("Crouching");
 		}
+    }
+
+    public override void PhysicsUpdate(float delta)
+    {
+		player.Velocity = MoveInDirection(player.walkSpeed, delta);
+		
+		if (GetInputDirection() == Vector3.Zero)
+		{
+			fsm.TransitionTo("Idle");
+		}
+		if (!player.IsOnFloor())
+		{
+			fsm.TransitionTo("Falling");
+		}
+		player.MoveAndSlide();
     }
 }

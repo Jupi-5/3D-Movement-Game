@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://b517el43lfdhp"]
+[gd_scene load_steps=20 format=3 uid="uid://b517el43lfdhp"]
 
 [ext_resource type="Script" path="res://scripts/Player.cs" id="1_fjk5g"]
 [ext_resource type="Texture2D" uid="uid://cr36dx1u1m8en" path="res://assets/JumpChargeMeterEmpty.png" id="2_0y0nc"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://scripts/States/Jumping.cs" id="7_ypf8v"]
 [ext_resource type="Script" path="res://scripts/States/Walking.cs" id="8_22hlo"]
 [ext_resource type="Script" path="res://scripts/States/Falling.cs" id="9_0xyuw"]
+[ext_resource type="Script" path="res://scripts/States/Crouching.cs" id="9_2v40p"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_3fura"]
 
@@ -356,6 +357,7 @@ script = ExtResource("8_22hlo")
 [node name="Running" type="Node" parent="StateMachine"]
 
 [node name="Crouching" type="Node" parent="StateMachine"]
+script = ExtResource("9_2v40p")
 
 [node name="Sliding" type="Node" parent="StateMachine"]
 

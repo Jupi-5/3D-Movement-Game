@@ -4,12 +4,9 @@ using System;
 public partial class Falling : PlayerState
 {
 
-	public Vector3 velocity;
-
 	public override void Enter()
 	{
-		//play a falling animation
-		GD.Print("falling");
+
 	}
 
     public override void PhysicsUpdate(float delta)
@@ -18,15 +15,15 @@ public partial class Falling : PlayerState
 
 		velocity = player.Velocity;
 		velocity.Y += player._getRealGravity() * delta;
-		GD.Print("Fall");
+		velocity += player.GetGravity() * delta;
 		if (player.IsOnFloor())
 		{
 			fsm.TransitionTo("Idle");
 		}
 		else if (direction != Vector3.Zero)
 		{
-			velocity.X = Mathf.Lerp(velocity.X, direction.X * player.walkSpeed, delta *2);
-			velocity.Z = Mathf.Lerp(velocity.Z, direction.Z * player.walkSpeed, delta *2);
+			velocity.X = Mathf.Lerp(velocity.X, direction.X * player.walkSpeed, delta *4);
+			velocity.Z = Mathf.Lerp(velocity.Z, direction.Z * player.walkSpeed, delta *4);
 		}	
 		player.Velocity = velocity;
 		player.MoveAndSlide();

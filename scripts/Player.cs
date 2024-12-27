@@ -51,6 +51,7 @@ public partial class Player : CharacterBody3D
 		chargeBar = GetNode<TextureProgressBar>("TextureProgressBar");
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		Mathf.Clamp(_rotationX, Mathf.DegToRad(-90f), Mathf.DegToRad(90f));
+		jumpVelocity = 2.0f * jumpHeight / jumpTimeToPeak;
 		jumpGravity = -2.0f * jumpHeight / (jumpTimeToPeak * jumpTimeToPeak);
 		fallGravity = -2.0f * jumpHeight / (jumpTimeToDescent * jumpTimeToDescent);
 		
@@ -97,31 +98,24 @@ public partial class Player : CharacterBody3D
 	//Mathf.Clamp(velocity.Z, -maxSpeed, maxSpeed);
     //Vector2 inputDir = Input.GetVector("left", "right", "up", "down");
 	//Vector3 direction = Head.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y);
-
+//
 	//velocity.Y += _getRealGravity() * (float)delta;
-
+//
 	//if (!IsOnFloor())
 	//{
 	//	velocity += GetGravity() * (float)delta;
 	//}
+//
+		if (Input.IsActionJustPressed("esc"))
+		{
+			GetTree().Quit();
+		}
 
-	//if (Input.IsActionJustPressed("esc"))
-	//{
-	//	GetTree().Quit();
-	//}
-
-	//if (jumpCharge > 10)
-	//{
-	//	chargeBar.Visible = true;
-	//	chargeBar.Value = jumpCharge;
-	//}
-	//if (newVelocity != velocity && newVelocity != Vector3.Zero)
-	//{
-	//	velocity = newVelocity;
-	//	newVelocity = Vector3.Zero;
-	//}
-	//Velocity = velocity;
-	//MoveAndSlide();
+		if (jumpCharge > 10)
+		{
+			chargeBar.Visible = true;
+			chargeBar.Value = jumpCharge;
+		}
 	}
 
 	public void _coachGunTimer()

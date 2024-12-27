@@ -3,30 +3,33 @@ using System;
 
 public partial class Jumping : PlayerState
 {
-
-    public Vector3 velocity;
-    
-
-
     public override void Enter()
     {
-        GD.Print("Jump");
+        velocity = player.Velocity;
+        if (jumpCharge == 0)
+        {
+	        velocity.Y = player.jumpVelocity;
+        }
+        else
+        {
+	        velocity.Y = player.jumpVelocity + jumpCharge / 10;
+        }
+        player.Velocity = velocity;
+        
     }
 
     public override void PhysicsUpdate(float delta)
     {
         velocity = player.Velocity;
 
-        player.Jump();
-        
-		GD.Print(velocity.Y);
-		player._jumpChargeReset();
+		velocity.Y += player._getRealGravity() * delta;
+		velocity += player.GetGravity() * delta;
 
         if (player.IsOnFloor())
         {
             fsm.TransitionTo("Idle");
         }
-        MoveInDirection(player.walkSpeed);
+        velocity = MoveInDirection(player.walkSpeed, delta);
         player.Velocity = velocity;
         player.MoveAndSlide();
     }
