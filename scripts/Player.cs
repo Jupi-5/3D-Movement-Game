@@ -16,7 +16,7 @@ public partial class Player : CharacterBody3D
 	public float jumpVelocity;
 	public float jumpGravity;
 	public float fallGravity;
-	public float jumpHeight = 10f;
+	public float jumpHeight = 11.5f;
 	public float jumpTimeToPeak = 2.75f;
 	public float jumpTimeToDescent = 2.0f;
 
@@ -128,7 +128,7 @@ public partial class Player : CharacterBody3D
 	{
 		//this one is retired forever. fly high </3
 		//velocity += new Vector3((-Head.Transform.Basis.Column0.Z *85) - Camera.Rotation.X * oppositeY *(-Head.Transform.Basis.Column0.Z *85 / 1.5707964f), -(Camera.Rotation.X *11.5f), (Head.Transform.Basis.Column2.Z *85) - Camera.Rotation.X * oppositeY *(Head.Transform.Basis.Column2.Z *85 / 1.5707964f));
-		newVelocity = new Vector3(Head.Basis.Z.X *coachGunPower.X, Head.Basis.Z.Y *coachGunPower.Y, Head.Basis.Z.Z *coachGunPower.X);
+		Velocity = new Vector3(Head.Basis.Z.X *coachGunPower.X, Head.Basis.Z.Y *coachGunPower.Y, Head.Basis.Z.Z *coachGunPower.X);
 	}
 	public void _printTest()
 	{

@@ -5,6 +5,7 @@ public partial class Jumping : PlayerState
 {
     public override void Enter()
     {
+        player.AP.Play("Jumping");
         velocity = player.Velocity;
         if (player.jumpCharge == 0)
         {
@@ -27,6 +28,10 @@ public partial class Jumping : PlayerState
 		velocity.Y += player._getRealGravity() * delta;
 		velocity += player.GetGravity() * delta;
 
+        player.Velocity = velocity;
+        player.MoveAndSlide();
+
+
         if (player.IsOnFloor())
         {
             fsm.TransitionTo("Idle");
@@ -41,7 +46,6 @@ public partial class Jumping : PlayerState
         }
 
         
-        player.Velocity = velocity;
-        player.MoveAndSlide();
+        
     }
 }

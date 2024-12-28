@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://b517el43lfdhp"]
+[gd_scene load_steps=24 format=3 uid="uid://b517el43lfdhp"]
 
 [ext_resource type="Script" path="res://scripts/Player.cs" id="1_fjk5g"]
 [ext_resource type="Texture2D" uid="uid://cr36dx1u1m8en" path="res://assets/JumpChargeMeterEmpty.png" id="2_0y0nc"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://scripts/States/Walking.cs" id="8_22hlo"]
 [ext_resource type="Script" path="res://scripts/States/Falling.cs" id="9_0xyuw"]
 [ext_resource type="Script" path="res://scripts/States/Crouching.cs" id="9_2v40p"]
+[ext_resource type="Script" path="res://scripts/States/UsingAbility.cs" id="10_w0aj6"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_3fura"]
 
@@ -291,11 +292,26 @@ tracks/6/keys = {
 "values": [Vector3(4.36622e-08, -1.5708, 1.52334)]
 }
 
+[sub_resource type="Animation" id="Animation_sy5v2"]
+resource_name = "Walking"
+step = 0.0
+
+[sub_resource type="Animation" id="Animation_gkcme"]
+resource_name = "Falling"
+step = 0.0
+
+[sub_resource type="Animation" id="Animation_ahudx"]
+resource_name = "Jumping"
+step = 0.0
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dpih0"]
 _data = {
 "CrouchGrounded": SubResource("Animation_nwn0o"),
+"Falling": SubResource("Animation_gkcme"),
 "Idle": SubResource("Animation_jf2vq"),
-"RESET": SubResource("Animation_wacnq")
+"Jumping": SubResource("Animation_ahudx"),
+"RESET": SubResource("Animation_wacnq"),
+"Walking": SubResource("Animation_sy5v2")
 }
 
 [node name="Player" type="CharacterBody3D"]
@@ -362,6 +378,7 @@ script = ExtResource("9_2v40p")
 [node name="Sliding" type="Node" parent="StateMachine"]
 
 [node name="UsingAbility" type="Node" parent="StateMachine"]
+script = ExtResource("10_w0aj6")
 
 [node name="Falling" type="Node" parent="StateMachine"]
 script = ExtResource("9_0xyuw")

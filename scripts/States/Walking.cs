@@ -3,7 +3,10 @@ using System;
 
 public partial class Walking : PlayerState
 {
-	//public void Enter() {}
+	public void Enter()
+	{
+		player.AP.Play("Walking");
+	}
 
     public override void HandleInput(InputEvent @event)
     {
@@ -27,7 +30,7 @@ public partial class Walking : PlayerState
 			//2. if crouch is pressed as you step off of a platform and enter the falling state at the same time you 
 			//are supposed to enter the crouching state a similar bug occurs
 			//3. if crouch is pressed repeatedly and rapidly while jumping as you walk off a ledge you are immediately snapped to floor
-			//and locked in a pseudo crouching state
+			//and locked in a pseudo crouching state (i cannot consistently replicate this one)
 			fsm.TransitionTo("Crouching");
 		}
     }

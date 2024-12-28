@@ -6,7 +6,7 @@ public partial class Falling : PlayerState
 
 	public override void Enter()
 	{
-
+		player.AP.Play("Falling");
 	}
 
     public override void PhysicsUpdate(float delta)
@@ -16,15 +16,17 @@ public partial class Falling : PlayerState
 		velocity = player.Velocity;
 		velocity.Y += player._getRealGravity() * delta;
 		velocity += player.GetGravity() * delta;
+		player.MoveAndSlide();
 		if (player.IsOnFloor())
 		{
-			if (direction != Vector3.Zero)
-			{
-				fsm.TransitionTo("Walking");
-			}
-			else if (Input.IsActionPressed("crouch"))
+			if (Input.IsActionPressed("crouch"))
 			{
 				fsm.TransitionTo("Crouching");
+			}
+			else if (direction != Vector3.Zero)
+			{
+				//fixed bug caused by checking for direction before crouch so if walking and crouching at the same time would always result in walking
+				fsm.TransitionTo("Walking");
 			}
 			else
 			{
@@ -38,7 +40,7 @@ public partial class Falling : PlayerState
 			velocity.Z = Mathf.Lerp(velocity.Z, direction.Z * player.walkSpeed, delta *2);
 		}	
 		player.Velocity = velocity;
-		player.MoveAndSlide();
+		
     }
 
 	public override void Exit() {}
