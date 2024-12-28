@@ -26,6 +26,8 @@ public partial class Walking : PlayerState
 			//no idea why this happens or how to fix it
 			//2. if crouch is pressed as you step off of a platform and enter the falling state at the same time you 
 			//are supposed to enter the crouching state a similar bug occurs
+			//3. if crouch is pressed repeatedly and rapidly while jumping as you walk off a ledge you are immediately snapped to floor
+			//and locked in a pseudo crouching state
 			fsm.TransitionTo("Crouching");
 		}
     }
