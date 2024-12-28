@@ -6,7 +6,7 @@ public partial class Idle : PlayerState
     public override void Enter()
     {
         player.AP.Play("Idle");
-        //player.ApplyFloorSnap(); //prevents bug that stores jump velocity after crouch is released.
+        player.ApplyFloorSnap(); //prevents bug that stores jump velocity after crouch is released.
     }
 
     public override void PhysicsUpdate(float delta)
