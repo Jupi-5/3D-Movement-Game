@@ -21,6 +21,11 @@ public partial class Walking : PlayerState
 		}
 		else if (Input.IsActionJustPressed("crouch"))
 		{
+			//1. if crouch is pressed while moving and direction never equals zero then the crouching state is entered but 
+			//Walking.PhysicsUpdate() is still run in place of that from the crouching state
+			//no idea why this happens or how to fix it
+			//2. if crouch is pressed as you step off of a platform and enter the falling state at the same time you 
+			//are supposed to enter the crouching state a similar bug occurs
 			fsm.TransitionTo("Crouching");
 		}
     }
