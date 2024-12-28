@@ -18,16 +18,24 @@ public partial class UsingAbility : PlayerState
     public override void PhysicsUpdate(float delta)
     {
 		velocity = player.Velocity;
-		
+
+		velocity.Y += player._getRealGravity() * delta;
+		velocity += player.GetGravity() * delta;
+
 		player.Velocity = velocity;
 		direction = GetInputDirection();
+
+		MoveInDirection(player.walkSpeed);
+
 		player.MoveAndSlide();
-        if (direction != Vector3.Zero)
+
+		if (!player.IsOnFloor())
 		{
-			velocity.X = Mathf.Lerp(velocity.X, direction.X * player.walkSpeed, delta *2);
-			velocity.Z = Mathf.Lerp(velocity.Z, direction.Z * player.walkSpeed, delta *2);
+			if (velocity.Y <= 0)
+			{
+				fsm.TransitionTo("Falling");
+			}
 		}
-		
     }
 
 	public void _coachGunTimer()
@@ -42,7 +50,7 @@ public partial class UsingAbility : PlayerState
 		GD.Print("bang!");
 		//this one is retired forever. fly high </3
 		//velocity += new Vector3((-Head.Transform.Basis.Column0.Z *85) - Camera.Rotation.X * oppositeY *(-Head.Transform.Basis.Column0.Z *85 / 1.5707964f), -(Camera.Rotation.X *11.5f), (Head.Transform.Basis.Column2.Z *85) - Camera.Rotation.X * oppositeY *(Head.Transform.Basis.Column2.Z *85 / 1.5707964f));
-		velocity = new Vector3(player.Head.Basis.Z.X *player.coachGunPower.X, player.Head.Basis.Z.Y *player.coachGunPower.Y, player.Head.Basis.Z.Z *player.coachGunPower.X);
+		player.Velocity = new Vector3(player.Head.Basis.Z.X *player.coachGunPower.X, player.Head.Basis.Z.Y *player.coachGunPower.Y, player.Head.Basis.Z.Z *player.coachGunPower.X);
 		player.MoveAndSlide();
 	}
 }

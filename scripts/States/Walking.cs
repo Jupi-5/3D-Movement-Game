@@ -33,6 +33,10 @@ public partial class Walking : PlayerState
 			//and locked in a pseudo crouching state (i cannot consistently replicate this one)
 			fsm.TransitionTo("Crouching");
 		}
+		if (Input.IsActionJustPressed("coachgun"))
+		{
+			fsm.TransitionTo("UsingAbility");
+		}
     }
 
     public override void PhysicsUpdate(float delta)

@@ -47,10 +47,10 @@ public partial class Player : CharacterBody3D
         Head = GetNode<Node3D>("Head");
 		AP = GetNode<AnimationPlayer>("AnimationPlayer");
 		Camera = GetNode<Camera3D>("Head/Camera3D");
-		coachGunPower = new Vector2(45f, 15f);
+		coachGunPower = new Vector2(25f, 10f);
 		chargeBar = GetNode<TextureProgressBar>("TextureProgressBar");
 		Input.MouseMode = Input.MouseModeEnum.Captured;
-		Mathf.Clamp(_rotationX, Mathf.DegToRad(-90f), Mathf.DegToRad(90f));
+
 		jumpVelocity = 2.0f * jumpHeight / jumpTimeToPeak;
 		jumpGravity = -2.0f * jumpHeight / (jumpTimeToPeak * jumpTimeToPeak);
 		fallGravity = -2.0f * jumpHeight / (jumpTimeToDescent * jumpTimeToDescent);

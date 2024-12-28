@@ -142,6 +142,10 @@ tracks/2/keys = {
 "values": [Vector3(0, 0.293213, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_gkcme"]
+resource_name = "Falling"
+step = 0.0
+
 [sub_resource type="Animation" id="Animation_jf2vq"]
 resource_name = "Idle"
 tracks/0/type = "value"
@@ -204,6 +208,10 @@ tracks/4/keys = {
 "update": 0,
 "values": [0.5]
 }
+
+[sub_resource type="Animation" id="Animation_ahudx"]
+resource_name = "Jumping"
+step = 0.0
 
 [sub_resource type="Animation" id="Animation_wacnq"]
 length = 0.001
@@ -294,14 +302,6 @@ tracks/6/keys = {
 
 [sub_resource type="Animation" id="Animation_sy5v2"]
 resource_name = "Walking"
-step = 0.0
-
-[sub_resource type="Animation" id="Animation_gkcme"]
-resource_name = "Falling"
-step = 0.0
-
-[sub_resource type="Animation" id="Animation_ahudx"]
-resource_name = "Jumping"
 step = 0.0
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dpih0"]

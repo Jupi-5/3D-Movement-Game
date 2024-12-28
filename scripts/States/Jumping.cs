@@ -44,8 +44,5 @@ public partial class Jumping : PlayerState
                 fsm.TransitionTo("Falling");
             }
         }
-
-        
-        
     }
 }
