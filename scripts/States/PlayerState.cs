@@ -15,16 +15,13 @@ public abstract partial class PlayerState : State
 
 	protected Player player;
 
-	public AnimationPlayer AP;
-
 	public Vector3 velocity;
 
-	public int jumpCharge = 0;
+
+	
 
     public override void _Ready()
     {
-		AP = GetNode<AnimationPlayer>("Player/AnimationPlayer");
-		GD.Print(AP);
 		fsm = GetParent<StateMachine>();
         player = Owner as Player;
 		if (player == null)
@@ -39,7 +36,7 @@ public abstract partial class PlayerState : State
     	return (player.collision.Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 	}
 
-	protected Vector3 MoveInDirection(float moveSpeed, double delta)
+	protected Vector3 MoveInDirection(float moveSpeed)
 	{
 		Vector3 newVelocity = player.Velocity;
 

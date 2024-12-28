@@ -18,12 +18,24 @@ public partial class Falling : PlayerState
 		velocity += player.GetGravity() * delta;
 		if (player.IsOnFloor())
 		{
-			fsm.TransitionTo("Idle");
+			if (direction != Vector3.Zero)
+			{
+				fsm.TransitionTo("Walking");
+			}
+			else if (Input.IsActionPressed("crouch"))
+			{
+				fsm.TransitionTo("Crouching");
+			}
+			else
+			{
+				fsm.TransitionTo("Idle");
+			}
 		}
+		
 		else if (direction != Vector3.Zero)
 		{
-			velocity.X = Mathf.Lerp(velocity.X, direction.X * player.walkSpeed, delta *4);
-			velocity.Z = Mathf.Lerp(velocity.Z, direction.Z * player.walkSpeed, delta *4);
+			velocity.X = Mathf.Lerp(velocity.X, direction.X * player.walkSpeed, delta *2);
+			velocity.Z = Mathf.Lerp(velocity.Z, direction.Z * player.walkSpeed, delta *2);
 		}	
 		player.Velocity = velocity;
 		player.MoveAndSlide();

@@ -3,7 +3,7 @@ using System;
 
 public partial class Walking : PlayerState
 {
-	public void Enter() {}
+	//public void Enter() {}
 
     public override void HandleInput(InputEvent @event)
     {
@@ -27,7 +27,7 @@ public partial class Walking : PlayerState
 
     public override void PhysicsUpdate(float delta)
     {
-		player.Velocity = MoveInDirection(player.walkSpeed, delta);
+		player.Velocity = MoveInDirection(player.walkSpeed);
 		
 		if (GetInputDirection() == Vector3.Zero)
 		{
